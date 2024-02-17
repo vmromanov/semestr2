@@ -5,35 +5,46 @@
 #include <stdio.h>
 #include "Date.h"
 
-int TimeDifference(Date* date1, Date* date2)
+void TimeDifference(Date* OldDate, Date* NewDate)
 {
-	Date date3;
-	if (date2->seconds - date1->seconds < 0)
-	{
-		date2->minutes--;
-		date3.seconds = 60 + (date2->seconds - date1->seconds);
-	}
-	else date3.seconds = date2->seconds - date1->seconds;
+	Date timeDif={0};
 
-	if (date2->minutes - date1->minutes < 0)
-	{
-		date2->hour--;
-		date3.minutes = 60 + (date2->minutes - date1->minutes);
-	}
-	else date3.minutes = date2->minutes - date1->minutes;
 
-	if (date2->hour - date1->hour < 0)
-	{
-		date2->day--;
-		date3.hour = 60 + (date2->hour - date1->hour);
-	}
-	else date3.hour = date2->hour - date1->hour;
+	/*timeDif.seconds = OldDate->seconds - NewDate->seconds;
+	if (timeDif.seconds < 0) { --timeDif.minutes; timeDif.seconds += 60; }
+	timeDif.minutes += OldDate->minutes - NewDate->minutes;
+	if (timeDif.minutes < 0) { --timeDif.hour; timeDif.minutes += 60; }
+	timeDif.hour += OldDate->hour - NewDate->hour;
+	if (timeDif.hour < 0) { --timeDif.day; timeDif.hour += 60; }
+	timeDif.day += OldDate->day - NewDate->day;
+	if (timeDif.day < 0) { --timeDif.month; timeDif.day += 30; }
+	timeDif.month += OldDate->month - NewDate->month;
+	if (timeDif.month < 0) { timeDif.year=-1; timeDif.month += 12; }
+	timeDif.year += (NewDate->year - OldDate->year);*/
 
-	
+
+	timeDif.year = OldDate->year - NewDate->year;
+	timeDif.month = 12 - OldDate->month + (timeDif.year - 1) * 12 + NewDate->month;
+	timeDif.day = 365 - OldDate->day+(timeDif.year-1)*365
+
+
+
+
+
+
+
+
+	printf("\n\nyear:%u month:%u days:%u hours:%u minutes:%u seconds:%u", timeDif.year, timeDif.month, timeDif.day, timeDif.hour, timeDif.minutes, timeDif.seconds);
+
 }
- //31d - 1,3,5,7,8,10,12
-//30d - 4,6,9,11
-//28/29d - 2
+
+int extraDaysCount(Date* OldDate, Date* NewDate)
+{
+	while (OldDate->year < NewDate->year)
+	{
+
+	}
+}
 
 
 
@@ -45,7 +56,61 @@ int LeapYear(Date* date)
 	return 0;
 }
 
-int FromNewYear(Date* date)
-{
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//timeDif.year = NewDate->year - OldDate->year;
+//timeDif.month = (12 - OldDate->month) + (timeDif.year - 1) * 12 + NewDate->month;
+//timeDif.day = 365 - OldDate->day + (timeDif.year - 1) * 365 + NewDate->day;
+//timeDif.hour = 24 - OldDate->hour + (timeDif.day - 1) * 24 + NewDate->hour;
+//timeDif.minutes = 60 - OldDate->minutes + (timeDif.hour - 1) * 60 + NewDate->minutes;
+//timeDif.seconds = 60 - OldDate->seconds + (timeDif.minutes - 1) * 60 + NewDate->seconds;

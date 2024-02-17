@@ -19,12 +19,62 @@ int main()
 	//printf("\n");
 	//printf("%d prime number is : %d", number, Problem7(number));
 
-	//LeapYear
-	printf("enter year");
-	Date date;
-	scanf_s("%d", &date.year);
+	////LeapYear
+	//printf("enter year");
+	//Date date;
+	//scanf_s("%d", &date.year);
+
+	//time difference
+
+	Date earlyDate; Date lateDate;
+	printf("enter year month day hour minutes seconds for earlyer date\n");
+	scanf_s("%u %u %u %u %u %u", &earlyDate.year, &earlyDate.month, &earlyDate.day, &earlyDate.hour, &earlyDate.minutes, &earlyDate.seconds);
+
+	printf("enter year month day hour minutes seconds for later date\n");
+	scanf_s("%u %u %u %u %u %u", &lateDate.year, &lateDate.month, &lateDate.day, &lateDate.hour, &lateDate.minutes, &lateDate.seconds);
+
+	TimeDifference(&earlyDate, &lateDate);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

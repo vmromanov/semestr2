@@ -5,24 +5,24 @@
 */
 typedef struct Date
 {
-	unsigned int year;		/// Год
-	unsigned int month;     /// Месяц
-	unsigned int day;       /// День
-	unsigned int hour;      /// Час
-	unsigned int minutes;   /// Минуты
-	unsigned int seconds;   /// Секунды
+	 int year;		/// Год
+	 int month;     /// Месяц
+	 int day;       /// День
+	 int hour;      /// Час
+	 int minutes;   /// Минуты
+	 int seconds;   /// Секунды
 } Date;
 
 /**
  * @brief является ли год високосным
 */
-int LeapYear(Date date);
+int LeapYear(Date* date);
 
 /**
- * @brief 
+ * @brief  вычисляет разницу во времени между двумя датами
  * @return 
 */
-int TimeDifference(Date date1, Date date2);
+void TimeDifference(Date* OldDate, Date* NewDate );
 
 
 /**
