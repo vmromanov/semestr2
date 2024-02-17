@@ -26,8 +26,9 @@ void TimeDifference(Date* OldDate, Date* NewDate );
 
 
 /**
- * @brief 
- * @param date 
+ * @brief считает кол-во добавленых дней между двух дат
+ * @param OldDate 
+ * @param NewDate 
  * @return 
 */
-int FromNewYear(Date date);
+int extraDaysCount(Date* OldDate, Date* NewDate);
