@@ -4,7 +4,7 @@
 
 
 int main()
-{
+{  // 
 	////problem 6
 	//printf("enter amount of numbers\n");
 	//int amount=0;

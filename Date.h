@@ -5,7 +5,7 @@
 */
 typedef struct Date
 {
-	 int year;		/// Год
+	 int year;		 /// Год
 	 int month;     /// Месяц
 	 int day;       /// День
 	 int hour;      /// Час

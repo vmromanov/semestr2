@@ -24,8 +24,9 @@ void TimeDifference(Date* OldDate, Date* NewDate)
 
 
 	timeDif.year = NewDate->year - OldDate->year;
-	timeDif.month = 12 - OldDate->month + (timeDif.year - 1) * 12 + NewDate->month;
-	timeDif.day = 365 - untillDate(&OldDate->month) + (timeDif.year - 1) * 365 + untillDate(NewDate) + extraDaysCount(OldDate, NewDate);
+	timeDif.month = 12 - OldDate->month + (timeDif.year - 1) * 12 + NewDate->month-(OldDate->month>NewDate->month?1:0);
+	/*timeDif.day = 365 - untillDate(&OldDate->month)-OldDate->day + (timeDif.year - 1) * 365 + untillDate(NewDate)-NewDate->day + extraDaysCount(OldDate, NewDate);*/
+	timeDif.day = (timeDif.year * 365) - untillDate(&OldDate->month)  + untillDate(&NewDate->month) - OldDate->day + extraDaysCount(&OldDate, &NewDate);
 	timeDif.hour = 24 - OldDate->hour + (timeDif.day - 1) * 24 + NewDate->hour;
 	timeDif.minutes = 60 - OldDate->hour + (timeDif.hour - 1) * 60 + NewDate->minutes;
 	timeDif.seconds = 60 - OldDate->seconds + (timeDif.minutes - 1) * 60 + NewDate->seconds;
