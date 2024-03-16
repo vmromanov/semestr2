@@ -32,3 +32,12 @@ void TimeDifference(Date* OldDate, Date* NewDate );
  * @return 
 */
 int extraDaysCount(Date* OldDate, Date* NewDate);
+
+
+int Days(int month);
+
+
+int untillDate(Date* date);
+
+
+
