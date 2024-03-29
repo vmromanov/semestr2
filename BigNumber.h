@@ -18,7 +18,7 @@ BigNumber* BignumCreate(char* number_);
 BigNumber* SummBig(BigNumber* number1, BigNumber* number2);
 
 
-BigNumber* MinusBig(BigNumber* number1, BigNumber* number2);
+BigNumber* MinusBN(BigNumber* number1, BigNumber* number2);
 
 
 void PrintBN(BigNumber* bn_);

@@ -56,88 +56,94 @@ BigNumber* BignumCreate(char* number_)
 
 BigNumber* SummBig(BigNumber* number1, BigNumber* number2)
 {
-   BigNumber* result = malloc(sizeof(BigNumber));
+    BigNumber* result = malloc(sizeof(BigNumber));
+    if (result == NULL)
+        return NULL;
 
-   if (result == NULL)
-   {
-      perror("memmory allocation error");
-      return NULL;
-   }
+    result->size = max(number1->size, number2->size) + 1;
+    result->digits = (digit*)calloc(result->size, sizeof(digit));
 
-   size_t maxSize = 0;
-   size_t minSize = 0;
+    if (result->digits == NULL)
+    {
+        free(result);
+        return NULL;
+    }
 
-   if (number1->size > number2->size)
-   {
-      maxSize = number1->size;
-      minSize = number2->size;
-   }
-   else
-   {
-      maxSize = number2->size;
-      minSize = number1->size;
-   }
+    BigNumber* min_bn = number1->size <= number2->size ? number1 : number2;
+    BigNumber* max_bn = number1->size > number2->size ? number1 : number2;
 
-
-   result->size = maxSize + 1;
-
-   result->digits = calloc(result->size, sizeof(digit));
-
-   if (result->digits == NULL)
-   {
-      free(result);
-      return NULL;
-   }
-
-
-   if ((number1->is_negative == true || number2->is_negative == true) && !(number1->is_negative == true && number2->is_negative == true))
-      return MinusBig(number1, number2);
-   
+    int carry = 0;
+    int diff = max_bn->size - min_bn->size;
   
-   if (number1->is_negative == true && number2->is_negative == true)
-      result->is_negative = true;
-   else
-      result->is_negative = false;
-
-   size_t difference = (maxSize - minSize);
-   printf("difference : %lld\n", difference);
-  /* for (long long int i = result->size; i > difference+1; --i)
-   {
-      result->digits[i] += (minSize==number1->size?number1->digits[i - difference]+number2->digits[i]:
-         number2->digits[i - difference] + number1->digits[i]);
-      for (long long int j = difference; j > 0; --j)
-         result->digits[j] += (maxSize == number1->size ? number1->digits[j] : number2->digits[j]);
-      if (result->digits[i] > 9)
-      {
-         result->digits[i] -= 10;
-         result->digits[i - 1]+=1;
-      }
-   }
-   for (long long int j = difference; j >= 0; --j) {
-      result->digits[j] += (maxSize == number1->size ? number1->digits[j] : number2->digits[j]);
-      if (result->digits[j] > 9)
-      {
-         result->digits[j] -= 10;
-         result->digits[j - 1] += 1;
-      }
-   }*/
-
-   for (long long int i = result->size; i > 1 ; --i)
-   {
-      result->digits[i] += (number1->size > number2->size ? number1->digits[i - 1] : number2->digits[i - 1]);
-   }
-   for (long long int i = result->size; i > 1; --i)
-   {
-      result->digits[i] += (number1->size < number2->size ? number1->digits[i - difference - 1] : number2->digits[i - difference - 1]);
-   }
+    if (number1->is_negative == false && number2->is_negative == false)
+    {
+        result->is_negative = false;
 
 
-   return result;
+
+        for (int i = min_bn->size - 1; i >= 0; --i)
+        {
+            char sum = (min_bn->digits[i] + max_bn->digits[i + diff]) + carry;
+            result->digits[i + diff + 1] = sum % 10;
+
+            carry = sum / 10;
+        }
+        carry = 0;
+
+        for (int i = diff - 1; i >= 0; --i) 
+        {
+            char sum = max_bn->digits[i] + carry; 
+            result->digits[i + 1] = sum %10 ; 
+            carry = sum / 10; 
+        }
+
+        result->digits[0] = carry;
+
+    }
+    else
+    {
+        return MinusBN(number1, number2);
+    }
+    return result;
 }
 
-BigNumber* MinusBig(BigNumber* number1, BigNumber* number2)
-{
 
+
+BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
+{
+    BigNumber* result = malloc(sizeof(BigNumber)); 
+    if (result == NULL) 
+        return NULL;
+
+    result->size = max(number1->size, number2->size) + 1; 
+    result->digits = (digit*)calloc(result->size, sizeof(digit)); 
+     
+    if (result->digits == NULL) 
+    { 
+        free(result); 
+        return NULL;
+    }
+
+    BigNumber* min_bn = number1->size <= number2->size ? number1 : number2; 
+    BigNumber* max_bn = number1->size > number2->size ? number1 : number2; 
+
+    int SizeDiff = max_bn->size - min_bn->size;
+
+
+    int carry = 0;
+    for (int i = min_bn->size - 1; i >= 0; i--) {
+        int diff = min_bn->digits[i] - max_bn->digits[i] - carry;
+        if (diff < 0) {
+            diff += 10;
+            carry = 1;
+        }
+        else {
+            carry = 0;
+        }
+        result->digits[i] = diff;
+    }
+
+    return result;
 }
 
 void PrintBN(BigNumber* bn_)
@@ -152,7 +158,7 @@ void PrintBN(BigNumber* bn_)
       printf("-");
 
    for (size_t i = 0; i < bn_->size ; ++i)
-      printf("%u", bn_->digits[i]);
+      printf("%c", bn_->digits[i]);
 
    printf("\n");
 }
