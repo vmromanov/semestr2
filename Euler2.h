@@ -16,7 +16,7 @@ int Problem7(int number);
 * 
 * 
 */
-int problem8(BigNumber* num_);
+unsigned long long problem8(BigNumber* num_);
 
 
 
@@ -24,6 +24,10 @@ int problem9(int sp);
 
 
 
+unsigned long long problem10(int n);
 
 
-int Prime(int a);
+int Prime(unsigned int a);
+
+
+

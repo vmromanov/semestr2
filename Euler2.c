@@ -1,4 +1,6 @@
+#include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include "BigNumber.h"
 
 int Problem6(int n)
@@ -23,7 +25,7 @@ int Prime(unsigned int a)
 	if (a % 2 == 0)
 		return 0;
 
-	for (unsigned long long i = 3; i * i <= a; i+=2)
+	for (unsigned long long i = 3; i <= sqrt(a) + 1; i+=2)
 		if (a % i == 0)
 			return 0;
 
@@ -48,17 +50,18 @@ int Problem7(int number)
 	}
 }
 
-int problem8(BigNumber* num_)
+unsigned long long problem8(BigNumber* num_)
 {
-	int max = 0;
-	for (int i = 0; i < num_->size - 14; ++i)
+	unsigned long long max = 0;
+	unsigned long long multiple = 1;
+	for (int i = 0; i < (num_->size) - 13; ++i)
 	{
-		int multiple = 1;
-		for (int j = i; j < i + 13; ++j)
+		multiple = 1;
+		for (int j = 0; j < 13; ++j)
 		{
-			multiple = multiple*(num_->digits[j]);
+			multiple = multiple * ((num_->digits)[j + i]);
 		}
-		if (multiple > max) max = multiple;
+		if (multiple > max) { max = multiple; }
 	}
 
 	return max;
@@ -91,6 +94,36 @@ int problem9(int sp)
 	}
 	return -1;
 }
+
+unsigned long long problem10(int n)
+{
+	unsigned long long summ = 0;
+	char* arr = (char*)(calloc(n,sizeof(int)));
+	if (arr == NULL)
+		return 0;
+
+	for (int i = 2; i<n; ++i)
+		arr[i] = 1;
+
+	for (int i = 2; i * i <= n; ++i)
+		if (arr[i] == 1)
+			for (int j = (i) * (i); j <= n; j += (i))
+				arr[j] = 0;
+
+	for (int i = 2; i < n; ++i)
+		if (arr[i] == 1)summ += i;
+	return summ;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
