@@ -37,16 +37,20 @@ int main()
 
 	//BigNUm
 
-	/*char number1[] = "555555555555555555555";
-	char number2[] = " 43333333333333333333";
-	printf(" 555555555555555555555\n");
-	printf("  33333333333333333333\n");
+	char number1[] = "555555555555";
+	char number2[] = "55555555550";
+	printf("555555555555\n");
+	printf("55555555550\n");
 	BigNumber* num1 = BignumCreate(number1);
 	BigNumber* num2 = BignumCreate(number2);
-	PrintBN(SummBig(num1, num2));
+	if (num1 == NULL)
+		printf("n1=NULL");
+	if (num2 == NULL)printf("n2=NULL");
+
+	PrintBN(MinusBN(num1, num2));
 
 	DeleteBN(&num1);
-	DeleteBN(&num2);*/
+	DeleteBN(&num2);
 
 
 
