@@ -45,10 +45,15 @@ BigNumber* BignumCreate(char* number_)
       free(Bn);
       return NULL;
    }
- 
-   for (size_t i = 0; i < Bn->size - (Bn->is_negative ? 1 : 0);++i)
-      Bn->digits[i] = number_[i] - '0';
-
+   if (Bn->size == 1)
+   {
+       Bn->digits[0] = (*number_ - '0');
+   }
+   else
+   {
+       for (size_t i = 0; i < Bn->size - (Bn->is_negative ? 1 : 0); ++i)
+           Bn->digits[i] = (number_[i] - '0');
+   }
    return Bn;
   
 }
@@ -107,11 +112,13 @@ BigNumber* SummBig(BigNumber* number1, BigNumber* number2)
     for (long long i = 0; result->digits[i] == 0; ++i)
        swipe++;
     for (int i = 0; i < swipe; ++i)
-       for (long long int j = 0; j < (result->size) - 1; ++j)
+       for (long long int j = 0; j < (long long int)(result->size) - 1; ++j)
           result->digits[j] = result->digits[j + 1];
 
     realloc(result->digits, ((result->size) - swipe) * sizeof(digit));
     result->size -= swipe;
+
+
     return result;
 }
 
@@ -119,11 +126,19 @@ BigNumber* SummBig(BigNumber* number1, BigNumber* number2)
 
 BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
 {
+    if (number1 == NULL || number2 == NULL)
+        return NULL;
+
+    BigNumber* num1 = number1;
+    BigNumber* num2 = number2;
+
+
+
     BigNumber* result = malloc(sizeof(BigNumber)); 
     if (result == NULL) 
         return NULL;
 
-    result->size = ((number1->size >= number2->size) ? (number1->size) : (number2->size)) + 1;
+    result->size = ((num1->size >= num2->size) ? (num1->size) : (num2->size)) + 1;
     result->digits = (digit*)calloc(result->size, sizeof(digit)); 
      
     if (result->digits == NULL) 
@@ -131,22 +146,63 @@ BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
         free(result);
         return NULL;
     }
-
-    BigNumber* min_bn = number1->size <= number2->size ? number1 : number2; 
-    BigNumber* max_bn = number1->size > number2->size ? number1 : number2; 
-
-    if (number1->is_negative != number2->is_negative)
+    BigNumber* min_bn;
+    BigNumber* max_bn;
+     min_bn = num1->size < num2->size ? num1 : num2; 
+     max_bn= num1->size > num2->size ? num1 : num2; 
+    if (num1->size == num2->size)
     {
-       result->is_negative = max_bn->is_negative;
+        for (int i = 0; i < num1->size; ++i)
+        {
+            if (num1->digits[i] > num2->digits[i])
+            {
+                max_bn = num1;
+                min_bn = num2;
+                break;
+            }
+            else
+                if (num1->digits[i] < num2->digits[i])
+                {
+                    max_bn = num2;
+                    min_bn = num1;
+                    break;
+                }
+                
+        }
+
+    }
+    if (min_bn == NULL || max_bn == NULL)
+    {
+        min_bn = num1;
+        max_bn = num2;
+    }
+   
+    if (num1->is_negative != num2->is_negative) 
+    {
+        if (num1->is_negative == true) 
+        {
+            num1->is_negative = false;
+            result = SummBig(num1, num2);
+            result->is_negative = true;
+            return result;
+        }
+        else
+        {
+            num2->is_negative = false;
+            result = SummBig(num1, num2);
+            result->is_negative = false;
+            return result; 
+        }
+       /*result->is_negative = max_bn->is_negative;
        min_bn->is_negative = max_bn->is_negative;
           result = SummBig(number1, number2);
-       return result;
+       return result;*/
     }
 
     size_t SizeDiff = max_bn->size - min_bn->size;
 
     int carry = 0;
-    if (number1->size >= number2->size)
+    if (num1->size >= num2->size)
     {
        for (long long int i = min_bn->size - 1; i >= 0; i--)
        {
@@ -165,7 +221,12 @@ BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
        for (long long int i = (long long int)(SizeDiff - 1); i >= 0; --i)
        {
           char diff = max_bn->digits[i] - carry;
-          carry = 0;
+          if (diff < 0) {
+              diff += 10;
+              carry = 1;
+          }
+          else
+              carry = 0;
           result->digits[i + 1] = diff;
        }
     }
@@ -174,9 +235,9 @@ BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
        result = MinusBN(number2, number1);
     }
 
-    if (number1->size > number2->size)result->is_negative = number1->is_negative;
-    if (number1->size < number2->size)
-       if (number2->is_negative == false)
+    if (num1->size > num2->size)result->is_negative = num1->is_negative;
+    if (num1->size < num2->size)
+       if (num2->is_negative == false)
           result->is_negative = true;
        else
           result->is_negative = false;
@@ -202,11 +263,11 @@ BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
 
     if (number1->size >= number2->size)
     {
-       int swipe = 0;;
+       size_t swipe = 0;;
        for (long long i = 0; (result->digits[i]) == 0; ++i)
           swipe++;
        for (int i = 0; i < swipe; ++i)
-          for (long long int j = 0; j < (result->size) - 1; ++j)
+          for (long long int j = 0; j < (long long int)(result->size) - 1; ++j)
              result->digits[j] = result->digits[j + 1];
 
        if (swipe != result->size)
@@ -226,35 +287,64 @@ BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
 
 BigNumber* BigMult(BigNumber* number1, BigNumber* number2)
 {
+    
    BigNumber* result = malloc(sizeof(BigNumber));
    if (result == NULL)
       return NULL;
 
+   result->is_negative = (number1->is_negative == number2->is_negative ? false : true);
 
-   result->size = number1->size + number2->size;
+   result->size = number2->size + number1->size;
 
-   result->digits = (digit*)calloc(result->size, sizeof(digit));
+   result->digits = calloc(result->size, sizeof(digit));
+   if (result->digits == NULL)
+   {
+       free(result);
+       return NULL;
+   }
+  
+  
+   BigNumber* bn_max = (number1->size >= number2->size ? number1 : number2);
+   BigNumber* bn_min = (number2->size <= number1->size ? number2 : number1);
 
-   if (number1->is_negative == number2->is_negative)
-      result->is_negative = false;
+   for (long long int i=bn_max->size-1;i>=0;--i)
+       for (long long j = bn_min->size-1; j >= 0; --j)
+       {
+           size_t num = result->size - (bn_max->size-i) - (bn_min->size-j)+1;
+           result->digits[num] = (bn_max->digits[i]) * (bn_min->digits[j]);
+       }
+
+   /*for (int i = 0; i < number1->size; ++i)
+       for (int j = 0; i < number2->size; ++i)
+           result->digits[i + j + 1] += number1->digits[i] * number2->digits[j];*/
+
+   for (long long int i = (long long int)(result->size)-1; i > 0; --i)
+   {
+       result->digits[i - 1] += result->digits[i] / 10;
+       result->digits[i] %= 10;
+   }
+
+
+
+   size_t swipe = 0;;
+   for (long long i = 0; (result->digits[i]) == 0; ++i)
+       swipe++;
+   for (int i = 0; i < swipe; ++i)
+       for (long long int j = 0; j < (long long int)(result->size) - 1; ++j)
+           result->digits[j] = result->digits[j + 1];
+
+   if (swipe != result->size)
+   {
+       realloc(result->digits, ((result->size) - swipe) * sizeof(digit));
+       result->size -= swipe;
+   }
    else
-      result->is_negative = true;
-
-   BigNumber* n1 = number1;
-   BigNumber* n2 = number2;
-
-   char ones = "1";
-   BigNumber* one = BignumCreate(ones);
-
-   char ki[] = "0";
-   BigNumber* i = BignumCreate(ki);
-
-   i->size = number2->size;
+   {
+       realloc(result->digits, ((result->size) - swipe + 1) * sizeof(digit));
+       result->size -= (swipe - 1);
+   }
    
-   while(MinusBN()!=0)
-
-
-
+   return result;
 
 }
 

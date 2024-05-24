@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <time.h>
 #include "Euler2.h"
 #include "Date.h"
@@ -37,21 +37,28 @@ int main()
 
 	//BigNUm
 
-	char number1[] = "555555555555";
-	char number2[] = "55555555550";
-	printf("555555555555\n");
-	printf("55555555550\n");
-	BigNumber* num1 = BignumCreate(number1);
+	char number1[] = "10";
+	char number2[] = "500";
+
+	//printf("-5\n");
+	//printf("50\n");
+	BigNumber* num1 = BignumCreate(number1);  // у изначального биг креате проблема с отрицательными единичными числами
+
 	BigNumber* num2 = BignumCreate(number2);
 	if (num1 == NULL)
 		printf("n1=NULL");
 	if (num2 == NULL)printf("n2=NULL");
 
-	PrintBN(MinusBN(num1, num2));
+	//PrintBN(SummBig(num1, num2));
+	//PrintBN(MinusBN(num2, one));
+	PrintBN(BigMult(num1,num2));
+	
+
 
 	DeleteBN(&num1);
 	DeleteBN(&num2);
-
+	
+	 
 
 
 	//proglem8

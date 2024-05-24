@@ -1,13 +1,13 @@
-#pragma once
+п»ї#pragma once
 #include <stdbool.h>
 
 typedef unsigned char digit;
 
 typedef struct BigNumber
 {
-   bool is_negative;                    // знаковое или нет
-   digit* digits;                // цифры
-   size_t size;                  // кол-во символов           
+   bool is_negative;                    // Г§Г­Г ГЄГ®ГўГ®ГҐ ГЁГ«ГЁ Г­ГҐГІ
+   digit* digits;                // Г¶ГЁГґГ°Г»
+   size_t size;                  // ГЄГ®Г«-ГўГ® Г±ГЁГ¬ГўГ®Г«Г®Гў           
 } BigNumber;
 
 
@@ -17,7 +17,13 @@ BigNumber* BignumCreate(char* number_);
 
 BigNumber* SummBig(BigNumber* number1, BigNumber* number2);
 
+BigNumber* BigMult(BigNumber* number1, BigNumber* number2);
 
+
+
+/*
+* @brief РІС‹С‡РёС‚Р°РµС‚ number2 from number1
+*/
 BigNumber* MinusBN(BigNumber* number1, BigNumber* number2);
 
 
