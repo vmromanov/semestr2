@@ -3,6 +3,7 @@
 #include "Euler2.h"
 #include "Date.h"
 #include "BigNumber.h"
+#include "base.h"
 int main()
 {  // 
 	////problem 6
@@ -37,26 +38,25 @@ int main()
 
 	//BigNUm
 
-	char number1[] = "5000";
-	char number2[] = "500";
+	//char number1[] = "5000";
+	//char number2[] = "500";
 
-	//printf("-5\n");
-	//printf("50\n");
-	BigNumber* num1 = BignumCreate(number1);  // у изначального биг креате проблема с отрицательными единичными числами
+	////printf("-5\n");
+	////printf("50\n");
+	//BigNumber* num1 = BignumCreate(number1);  // у изначального биг креате проблема с отрицательными единичными числами
 
-	BigNumber* num2 = BignumCreate(number2);
-	if (num1 == NULL)
-		printf("n1=NULL");
-	if (num2 == NULL)printf("n2=NULL");
+	//BigNumber* num2 = BignumCreate(number2);
+	//if (num1 == NULL)
+	//	printf("n1=NULL");
+	//if (num2 == NULL)printf("n2=NULL");
 
-	//PrintBN(SummBig(num1, num2));
-	//PrintBN(MinusBN(num1, num2));
-	//PrintBN(BigMult(num1,num2));
-	//PrintBN(divideBig(num1, num2));
+	////PrintBN(SummBig(num1, num2));
+	////PrintBN(MinusBN(num1, num2));
+	////PrintBN(BigMult(num1,num2));
+	////PrintBN(divideBig(num1, num2));
 
-
-	DeleteBN(&num1);
-	DeleteBN(&num2);
+	//DeleteBN(&num1);
+	//DeleteBN(&num2);
 	
 	 
 
@@ -92,6 +92,54 @@ int main()
 	//double runtime = (double)(end - begin) / CLOCKS_PER_SEC;
 	//printf("runtime: %f\n", runtime);
 	//printf("%llu\n", rez);
+
+
+	//database
+	
+	studentDataBase* db = createdatabase(10);
+	if (!db)
+	{
+		printf("database creation error\n");
+		return -1;
+	}
+	int choose;
+	printf("choise:\n");
+	printf("1 - add student \n");
+	printf("2 - delete student\n");
+	printf("3 - find student\n");
+	printf("4 - sort data base\n");
+	printf("5 - print data base\n");
+	printf("6 - delete data base\n");
+	
+	while (1)
+	{
+		scanf("%d", &choose);
+		switch (choose) 
+		{
+		case 1:
+			addFromConsol(db);
+			break;
+		case 2:
+			deleteStudentByConsol(db);
+			break;
+		case 3:
+			findByConsol(db);
+			break;
+		case 4:
+			sortByConsole(db);
+			break;
+		case 5:
+			PrintDatabase(db);
+			break;
+		case 6:
+			deleteDataBase(db);
+			return 0;
+			break;
+		default:
+			printf("incorrect enter\n");
+			break;
+		}
+	}
 
 	return 0;
 }
