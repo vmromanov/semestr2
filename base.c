@@ -223,11 +223,11 @@ student* findStudentByNameAndCourse(studentDataBase* db, const char* name, int c
 
 void addFromConsol(studentDataBase* db)
 {
-    char* name;
+    char* name = NULL;
     int age, crs, subjectnumb;
     char** sbjkts;
     printf("formate: name,age,course,numberOfSubjects");
-    scanf("%s,%d,%d,%d", name, &age, &crs, &subjectnumb);
+    scanf("%m,%d,%d,%d", &name, &age, &crs, &subjectnumb);
     sbjkts = malloc(subjectnumb * sizeof(char*));
     if (!sbjkts) 
     {
@@ -255,26 +255,33 @@ void addFromConsol(studentDataBase* db)
 void deleteStudentByConsol(studentDataBase* db)
 {
     int course;
-    char* name;
+    char* name = NULL;
     printf("enter name and course\n");
     printf("formate: name,course\n");
-    scanf("%s,%d", name, &course);
+    scanf("%m,%d", &name, &course);
 
     deleteStudentByNameAndCourse(db, name, course);
 }
 
 void findByConsol(studentDataBase* db)
 {
+    int sv = 0;
     int course;
-    char* name;
+    char* name = NULL;
     printf("enter name and course(formate: name,course)\n");
-    scanf("%s,%d", name, &course);
+    sv = scanf("%m,%d", &name, &course);
+    if (sv != 2) { printf("scaning error"); return; }
     student* std = findStudentByNameAndCourse(db, name, course);
     int choose;
     printf("choose what to do with student:\n");
     printf("1 - print average grade\n");
     printf("2 - print student info\n");
-    scanf("%d", &choose);
+    sv = scanf("%d", &choose);
+    if (sv != 1)
+    {
+        printf("scan error");
+        return;
+    }
     switch (choose)
     {
     case 1:
