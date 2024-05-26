@@ -19,7 +19,7 @@ BigNumber* SummBig(BigNumber* number1, BigNumber* number2);
 
 BigNumber* BigMult(BigNumber* number1, BigNumber* number2);
 
-
+BigNumber* divideBig(BigNumber* dividend, BigNumber* divisor);
 
 /*
 * @brief вычитает number2 from number1

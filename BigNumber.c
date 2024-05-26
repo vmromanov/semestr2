@@ -114,10 +114,10 @@ BigNumber* SummBig(BigNumber* number1, BigNumber* number2)
     for (int i = 0; i < swipe; ++i)
        for (long long int j = 0; j < (long long int)(result->size) - 1; ++j)
           result->digits[j] = result->digits[j + 1];
-
-    realloc(result->digits, ((result->size) - swipe) * sizeof(digit));
+    digit* save;
+    save=realloc(result->digits, ((result->size) - swipe) * sizeof(digit)); 
     result->size -= swipe;
-
+    if (save!=NULL) result->digits = save;
 
     return result;
 }
@@ -182,21 +182,18 @@ BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
         if (num1->is_negative == true) 
         {
             num1->is_negative = false;
-            result = SummBig(num1, num2);
+            *result = *(SummBig(num1, num2));
             result->is_negative = true;
             return result;
         }
         else
         {
             num2->is_negative = false;
-            result = SummBig(num1, num2);
+            *result = *(SummBig(num1, num2));
             result->is_negative = false;
             return result; 
         }
-       /*result->is_negative = max_bn->is_negative;
-       min_bn->is_negative = max_bn->is_negative;
-          result = SummBig(number1, number2);
-       return result;*/
+     
     }
 
     size_t SizeDiff = max_bn->size - min_bn->size;
@@ -232,7 +229,7 @@ BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
     }
     else
     {
-       result = MinusBN(number2, number1);
+       *result = *(MinusBN(number2, number1));
     }
 
     if (num1->size > num2->size)result->is_negative = num1->is_negative;
@@ -270,16 +267,20 @@ BigNumber* MinusBN(BigNumber* number1, BigNumber* number2)
           for (long long int j = 0; j < (long long int)(result->size) - 1; ++j)
              result->digits[j] = result->digits[j + 1];
 
+       digit* save;
+
        if (swipe != result->size)
        {
-          realloc(result->digits, ((result->size) - swipe) * sizeof(digit));
+           save = (digit*)realloc(result->digits, (result->size - swipe) * sizeof(digit));
           result->size -= swipe;
        }
        else
        {
-          realloc(result->digits, ((result->size) - swipe + 1) * sizeof(digit));
+           save = (digit*)realloc(result->digits, (result->size - swipe+1) * sizeof(digit));
           result->size -= (swipe - 1);
        }
+       if (save!=NULL)
+       result->digits = save; 
     }
 
     return result;
@@ -332,21 +333,108 @@ BigNumber* BigMult(BigNumber* number1, BigNumber* number2)
    for (int i = 0; i < swipe; ++i)
        for (long long int j = 0; j < (long long int)(result->size) - 1; ++j)
            result->digits[j] = result->digits[j + 1];
-
+   digit* save;
    if (swipe != result->size)
    {
-       realloc(result->digits, ((result->size) - swipe) * sizeof(digit));
+       save=realloc(result->digits, ((result->size) - swipe) * sizeof(digit));
        result->size -= swipe;
    }
    else
    {
-       realloc(result->digits, ((result->size) - swipe + 1) * sizeof(digit));
+       save=realloc(result->digits, ((result->size) - swipe + 1) * sizeof(digit)); 
        result->size -= (swipe - 1);
    }
-   
+   if (save != NULL)result->digits = save;
    return result;
 
 }
+
+bool isZero(BigNumber* num) 
+{
+    for (size_t i = 0; i < num->size; i++) {
+        if (num->digits[i] != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int compare(BigNumber* num1, BigNumber* num2)
+{
+    if (num1->size > num2->size)return 1;
+    if (num2->size > num2->size)return -1;
+    for (size_t i = 0; i < num1->size; ++i)
+        if (num1->digits[i] > num2->digits[i])
+            return 1;
+        else
+            if (num2->digits[i] > num1->digits[i])
+                return -1;
+
+    return 0;
+}
+
+BigNumber* divideBig(BigNumber* dividend, BigNumber* divisor) 
+{
+    BigNumber* result = (BigNumber*)malloc(sizeof(BigNumber));
+    if (result == NULL)return(NULL);
+
+    char* zero = "0";
+    result = BignumCreate(zero);
+
+    char* one = "1";
+    BigNumber* ones = (BigNumber*)malloc(sizeof(BigNumber));
+    if (ones == NULL)return NULL; 
+    ones = BignumCreate(one);
+
+    BigNumber* div = (BigNumber*)malloc(sizeof(BigNumber));
+    if (div == NULL)return NULL;
+    bool cpy = dividend->is_negative;
+    *div = *dividend;
+
+    while (div->is_negative==cpy&&!(div->size==1&&div->digits[0]==0)&& compare(dividend, divisor) >=0)
+    {
+        *result = *(SummBig(result, ones));
+        *div = *(MinusBN(div, divisor));
+        printf("div:");
+        PrintBN(div);
+        printf("\n");
+    }
+
+    /*BigNumber* result = (BigNumber*)malloc(sizeof(BigNumber));
+    if (result == NULL)return NULL;
+    result->is_negative = dividend->is_negative ^ divisor->is_negative;
+    result->size = dividend->size;
+
+    result->digits = (digit*)malloc(result->size * sizeof(digit));
+    if (result->digits == NULL) { free(result); return NULL; }
+    for (size_t i = 0; i < result->size; i++) 
+        result->digits[i] = 0;
+
+    BigNumber* remainder = (BigNumber*)malloc(sizeof(BigNumber));
+    if (remainder == NULL)return NULL;
+    *remainder = *dividend;
+
+    while (!isZero(remainder)) 
+    {
+        digit quotientDigit = 0;
+        while (compare(remainder, divisor) >= 0) {
+           *remainder = *(MinusBN(remainder, divisor));
+            quotientDigit++;
+        }
+
+        for (size_t i = result->size - 1; i > 0; i--) {
+            result->digits[i] = result->digits[i - 1];
+        }
+        result->digits[0] = quotientDigit;
+    }
+    free(remainder);*/
+    return result;
+}
+
+
+
+
+
 
 void PrintBN(BigNumber* bn_)
 {

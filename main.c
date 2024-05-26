@@ -37,7 +37,7 @@ int main()
 
 	//BigNUm
 
-	char number1[] = "10";
+	char number1[] = "5000";
 	char number2[] = "500";
 
 	//printf("-5\n");
@@ -50,9 +50,9 @@ int main()
 	if (num2 == NULL)printf("n2=NULL");
 
 	//PrintBN(SummBig(num1, num2));
-	//PrintBN(MinusBN(num2, one));
-	PrintBN(BigMult(num1,num2));
-	
+	//PrintBN(MinusBN(num1, num2));
+	//PrintBN(BigMult(num1,num2));
+	//PrintBN(divideBig(num1, num2));
 
 
 	DeleteBN(&num1);
